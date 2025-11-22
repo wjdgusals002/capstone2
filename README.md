@@ -665,13 +665,7 @@ train_loader = DataLoader(train_ds, batch_size=4, ...)  # 8 → 4
 
 ---
 
-## 📄 라이선스
-
-이 프로젝트는 교육 및 연구 목적으로 제작되었습니다.
-
----
-
-## 🙏 감사의 말
+## 출처
 
 - [segmentation-models-pytorch](https://github.com/qubvel/segmentation_models.pytorch) - U-Net 구현
 - [FastAPI](https://fastapi.tiangolo.com/) - 백엔드 프레임워크
@@ -681,12 +675,4 @@ train_loader = DataLoader(train_ds, batch_size=4, ...)  # 8 → 4
 
 ---
 
-<div align="center">
 
-**🚁 드론 부품 세그멘테이션 AI 시스템**
-
-Made with ❤️ by 사드론
-
-[📘 모델 설계](docs/모델설계.md) • [📗 백엔드](docs/백엔드.md) • [📙 프론트엔드](docs/프론트엔드.md)
-
-</div>

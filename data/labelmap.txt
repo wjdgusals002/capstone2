@@ -1,0 +1,7 @@
+# label:color_rgb:parts:actions
+arm:255,128,0::
+background:0,0,0::
+body:255,0,0::
+camera:0,255,0::
+landing_gear:0,0,255::
+propeller:255,255,0::

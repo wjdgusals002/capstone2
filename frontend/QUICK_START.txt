@@ -1,0 +1,75 @@
+====================================
+드론 분석 시스템 - 빠른 시작 가이드
+====================================
+
+[1단계] Node.js 설치 확인
+--------------------------
+터미널(명령 프롬프트)을 열고:
+
+  node --version
+
+Node.js가 없으면: https://nodejs.org/ 에서 설치
+
+
+[2단계] 프로젝트 폴더 생성
+--------------------------
+  mkdir drone-analysis
+  cd drone-analysis
+
+
+[3단계] 모든 파일 복사
+--------------------------
+이 프로젝트의 모든 파일을 drone-analysis 폴더에 복사하세요.
+
+필수 파일 체크리스트:
+☐ index.html
+☐ main.tsx
+☐ App.tsx
+☐ package.json
+☐ vite.config.ts
+☐ tsconfig.json
+☐ components/ 폴더 (모든 하위 파일 포함)
+☐ styles/ 폴더 (globals.css 포함)
+
+
+[4단계] 의존성 설치
+--------------------------
+프로젝트 폴더에서:
+
+  npm install
+
+(1-3분 소요)
+
+
+[5단계] 실행!
+--------------------------
+  npm run dev
+
+브라우저에서 http://localhost:3000 접속
+
+
+====================================
+문제 해결
+====================================
+
+Q: "npm: command not found" 에러
+A: Node.js를 설치하세요 → https://nodejs.org/
+
+Q: 포트 3000이 사용 중
+A: npm run dev -- --port 3001
+
+Q: 이미지가 안 보임 (figma:asset 에러)
+A: DroneAnalysis.tsx 파일에서 아래 줄을 수정:
+
+   수정 전:
+   import exampleDrone from 'figma:asset/...';
+
+   수정 후:
+   const exampleDrone = 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=800';
+
+Q: 빈 화면만 보임
+A: F12 눌러서 Console 탭의 에러 메시지 확인
+
+====================================
+문의: 에러 메시지를 복사해서 보내주세요
+====================================

@@ -1,0 +1,28 @@
+# 주의: 설치 순서가 중요합니다!
+# 먼저 numpy를 설치한 후 다른 패키지를 설치하세요.
+
+# 기본 의존성 (먼저 설치)
+numpy>=1.21.0,<1.27.0
+Pillow>=9.0.0
+
+# FastAPI 관련
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+python-multipart>=0.0.6
+
+# PyTorch (CPU 버전 - 더 가벼움)
+# GPU 버전이 필요한 경우 별도 설치 필요
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.0.0
+torchvision>=0.15.0
+
+# Computer Vision
+opencv-python-headless>=4.8.0
+albumentations>=1.3.0
+
+# 세그멘테이션 모델
+segmentation-models-pytorch>=0.3.0
+
+# 유틸리티
+pydantic>=2.0.0
+python-dotenv>=1.0.0

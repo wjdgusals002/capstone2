@@ -1,0 +1,19 @@
+# Force Python provider and ignore Node.js
+[providers]
+python = true
+nodejs = false
+
+[phases.setup]
+nixPkgs = ['python310', 'gcc', 'libGL', 'libglib']
+
+[phases.install]
+dependsOn = ['setup']
+cmds = [
+  'cd backend',
+  'pip install --upgrade pip',
+  'pip install "numpy>=1.21.0,<1.27.0"',
+  'pip install -r requirements.txt'
+]
+
+[start]
+cmd = 'cd backend && uvicorn app:app --host 0.0.0.0 --port $PORT'

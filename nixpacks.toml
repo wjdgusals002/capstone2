@@ -1,13 +1,7 @@
-# Force Python provider and ignore Node.js
-[providers]
-python = true
-nodejs = false
-
 [phases.setup]
 nixPkgs = ['python310', 'gcc', 'libGL', 'libglib']
 
 [phases.install]
-dependsOn = ['setup']
 cmds = [
   'cd backend',
   'pip install --upgrade pip',

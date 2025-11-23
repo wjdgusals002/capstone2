@@ -13,6 +13,9 @@ RUN apt-get update && apt-get install -y \
 # history2.json 복사 (모델 정보용)
 COPY history2.json /app/history2.json
 
+# models 디렉토리 생성 (모델은 시작 시 Google Drive에서 다운로드)
+RUN mkdir -p /app/models
+
 # backend 폴더로 이동
 WORKDIR /app/backend
 

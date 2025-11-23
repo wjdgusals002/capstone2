@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['python310', 'gcc', 'libGL', 'libglib']
+nixPkgs = ['python310', 'gcc', 'libGL', 'glib']
 
 [phases.install]
 cmds = [

@@ -55,7 +55,7 @@
             "vite": "6.3.5"
       },
       "scripts": {
-            "dev": "node server.js",
-            "build": "vite build"
+      "dev": "node server.js",
+      "start": "node server.js"
       }
 }

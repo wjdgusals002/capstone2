@@ -25,15 +25,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 서버 시작 시 모델 로드
+# 서버 시작 시 모델 다운로드 및 로드
 @app.on_event("startup")
 async def startup_event():
-    """서버 시작 시 모델 로드"""
+    """서버 시작 시 모델 다운로드 및 로드"""
+    from download_model import download_model
+
+    # 1. 모델 파일 다운로드 (없는 경우)
+    try:
+        download_model()
+    except Exception as e:
+        print(f"⚠️  Warning: Model download failed: {e}")
+
+    # 2. 모델 로드
     model_path = Path(__file__).parent.parent / "models" / "final_model.pth"
-    
+
     if not model_path.exists():
         print(f"⚠️  Warning: Model file not found at {model_path}")
-        print("   Please place 'best_model_v2.pth' in the 'models/' folder")
+        print("   Please download manually from Google Drive")
     else:
         try:
             load_model(str(model_path))

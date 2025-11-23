@@ -6,6 +6,7 @@ from PIL import Image
 import io
 import base64
 from pathlib import Path
+import asyncio
 
 # 모델 로드
 from models.unet_model import load_model, predict, get_device
@@ -25,15 +26,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 서버 시작 시 모델 다운로드 및 로드
-@app.on_event("startup")
-async def startup_event():
-    """서버 시작 시 모델 다운로드 및 로드"""
+# 백그라운드에서 모델 다운로드 및 로드
+async def download_and_load_model():
+    """백그라운드에서 모델 다운로드 및 로드 (서버 시작을 블록하지 않음)"""
     from download_model import download_model
+
+    print("🔄 Starting model download in background...")
 
     # 1. 모델 파일 다운로드 (없는 경우)
     try:
-        download_model()
+        await asyncio.to_thread(download_model)
     except Exception as e:
         print(f"⚠️  Warning: Model download failed: {e}")
 
@@ -45,10 +47,17 @@ async def startup_event():
         print("   Please download manually from Google Drive")
     else:
         try:
-            load_model(str(model_path))
+            await asyncio.to_thread(load_model, str(model_path))
             print("🚀 Model loaded successfully!")
         except Exception as e:
             print(f"❌ Failed to load model: {e}")
+
+# 서버 시작 시 백그라운드 작업 시작
+@app.on_event("startup")
+async def startup_event():
+    """서버 시작 시 백그라운드에서 모델 다운로드"""
+    print("✅ Server starting - model will download in background")
+    asyncio.create_task(download_and_load_model())
             
     
 

@@ -9,3 +9,13 @@ cmds = [
 
 [start]
 cmd = 'uvicorn app:app --host 0.0.0.0 --port $PORT'
+
+providers = ["node"]
+
+[phases.install]
+cmds = ["npm install"]
+
+# build phase 일부러 생략 (프론트 build 안 함)
+
+[start]
+cmd = "npm run start"  # 또는 "node server.js"

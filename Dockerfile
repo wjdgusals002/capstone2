@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     libglib2.0-0 \
     && rm -rf /var/lib/apt/lists/*
 
+# history2.json 복사 (모델 정보용)
+COPY history2.json /app/history2.json
+
 # backend 폴더로 이동
 WORKDIR /app/backend
 

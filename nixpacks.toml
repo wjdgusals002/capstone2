@@ -3,10 +3,7 @@ nixPkgs = ['python310', 'gcc', 'libGL', 'glib']
 
 [phases.install]
 cmds = [
-  'cd backend',
-  'pip install --upgrade pip',
-  'pip install "numpy>=1.21.0,<1.27.0"',
-  'pip install -r requirements.txt'
+  'cd backend && python3 -m pip install --upgrade pip && python3 -m pip install "numpy>=1.21.0,<1.27.0" && python3 -m pip install -r requirements.txt'
 ]
 
 [start]

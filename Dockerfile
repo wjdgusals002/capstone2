@@ -24,5 +24,5 @@ COPY backend/ .
 # 포트 노출
 EXPOSE 8000
 
-# 서버 실행
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# 서버 실행 (Railway의 PORT 환경 변수 사용)
+CMD sh -c "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"

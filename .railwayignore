@@ -1,0 +1,7 @@
+frontend/
+node_modules/
+*.md
+docs/
+.git/
+.gitignore
+render.yaml

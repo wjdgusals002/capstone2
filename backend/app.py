@@ -40,7 +40,7 @@ async def download_and_load_model():
         print(f"⚠️  Warning: Model download failed: {e}")
 
     # 2. 모델 로드
-    model_path = Path(__file__).parent.parent / "models" / "final_model.pth"
+    model_path = Path(__file__).parent.parent / "models" / "best_model.pth"
 
     if not model_path.exists():
         print(f"⚠️  Warning: Model file not found at {model_path}")

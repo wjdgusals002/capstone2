@@ -29,6 +29,7 @@ export function DroneAnalysis() {
   const [predictionResult, setPredictionResult] = useState<PredictionResult | null>(null);
   const [modelInfo, setModelInfo] = useState<ModelInfo | null>(null);
   const [isLoadingModelInfo, setIsLoadingModelInfo] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   // 컴포넌트 마운트 시 모델 정보 가져오기
   useEffect(() => {
@@ -50,17 +51,87 @@ export function DroneAnalysis() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-        setShowResults(false);
-        setPredictionResult(null);
-        setProcessingState({ stage: 'idle', progress: 0 });
-        // 자동으로 분석 시작
-        startAnalysis(file);
-      };
-      reader.readAsDataURL(file);
+      processFile(file);
+    }
+  };
+
+  const processFile = (file: File) => {
+    console.log('processFile called with:', { name: file.name, type: file.type, size: file.size });
+
+    // 이미지 파일인지 확인 (타입 또는 확장자로 체크)
+    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+    const fileName = file.name.toLowerCase();
+    const hasValidExtension = validExtensions.some(ext => fileName.endsWith(ext));
+    const hasValidType = file.type.startsWith('image/');
+
+    if (!hasValidType && !hasValidExtension) {
+      console.error('Invalid file type:', file.type);
+      setProcessingState({
+        stage: 'idle',
+        progress: 0,
+        error: '이미지 파일만 업로드할 수 있습니다. (JPG, PNG, GIF 등)'
+      });
+      return;
+    }
+
+    console.log('File type valid, starting to read file...');
+    setSelectedFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      console.log('File read complete, starting analysis...');
+      setSelectedImage(reader.result as string);
+      setShowResults(false);
+      setPredictionResult(null);
+      setProcessingState({ stage: 'idle', progress: 0 });
+      // 자동으로 분석 시작
+      startAnalysis(file);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    // 자식 요소로 이동하는 경우는 무시
+    const rect = e.currentTarget.getBoundingClientRect();
+    if (
+      e.clientX >= rect.left &&
+      e.clientX <= rect.right &&
+      e.clientY >= rect.top &&
+      e.clientY <= rect.bottom
+    ) {
+      return;
+    }
+
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    const files = e.dataTransfer.files;
+    console.log('Drop event triggered', { filesLength: files.length, files });
+
+    if (files && files.length > 0) {
+      const file = files[0];
+      console.log('Processing file:', { name: file.name, type: file.type, size: file.size });
+      processFile(file);
+    } else {
+      console.error('No files found in drop event');
     }
   };
 
@@ -156,7 +227,15 @@ export function DroneAnalysis() {
           )}
 
           {/* 이미지 업로드 영역 */}
-          <Card className="p-8">
+          <Card
+            className={`p-8 transition-colors ${
+              isDragging ? 'border-blue-500 bg-blue-50 border-2' : ''
+            }`}
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
             <div className="flex flex-col items-center justify-center">
               {selectedImage ? (
                 <div className="w-full max-w-4xl">
@@ -275,23 +354,38 @@ export function DroneAnalysis() {
                 </div>
               ) : (
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <ImageIcon className="h-12 w-12 text-slate-400" />
+                  <div className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors ${
+                    isDragging ? 'bg-blue-100' : 'bg-slate-100'
+                  }`}>
+                    <ImageIcon className={`h-12 w-12 transition-colors ${
+                      isDragging ? 'text-blue-600' : 'text-slate-400'
+                    }`} />
                   </div>
-                  <h3 className="text-slate-900 mb-2">드론 이미지를 업로드하세요</h3>
-                  <p className="text-slate-600 mb-6">PNG, JPG 파일을 지원합니다 • 업로드 즉시 자동 분석됩니다</p>
-                  <div className="flex gap-4 justify-center">
-                    <Button
-                      onClick={() => document.getElementById('image-upload')?.click()}
-                      className="bg-blue-600 hover:bg-blue-700"
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      이미지 업로드
-                    </Button>
-                    <Button variant="outline" onClick={handleUseExample}>
-                      예시 이미지 사용
-                    </Button>
-                  </div>
+                  <h3 className={`mb-2 transition-colors ${
+                    isDragging ? 'text-blue-900' : 'text-slate-900'
+                  }`}>
+                    {isDragging ? '여기에 이미지를 놓으세요' : '드론 이미지를 업로드하세요'}
+                  </h3>
+                  <p className="text-slate-600 mb-6">
+                    {isDragging
+                      ? '이미지를 놓으면 자동으로 분석이 시작됩니다'
+                      : 'PNG, JPG 파일을 지원합니다 • 드래그 앤 드롭 또는 클릭하여 업로드'
+                    }
+                  </p>
+                  {!isDragging && (
+                    <div className="flex gap-4 justify-center">
+                      <Button
+                        onClick={() => document.getElementById('image-upload')?.click()}
+                        className="bg-blue-600 hover:bg-blue-700"
+                      >
+                        <Upload className="h-4 w-4 mr-2" />
+                        이미지 업로드
+                      </Button>
+                      <Button variant="outline" onClick={handleUseExample}>
+                        예시 이미지 사용
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
               <input
